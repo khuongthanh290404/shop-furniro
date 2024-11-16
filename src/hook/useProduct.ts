@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 export const useProduct = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const token = localStorage.getItem("token");
   useEffect(() => {
     (async () => {
       getAllProducts();
@@ -49,7 +50,7 @@ export const useProduct = () => {
           productData,
           {
             headers: {
-              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -64,12 +65,20 @@ export const useProduct = () => {
     }
   };
   const getAllProducts = async () => {
-    const { data } = await axios.get("http://localhost:3000/api/products");
+    const { data } = await axios.get("http://localhost:3000/api/products", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     setProducts(data);
   };
   const remove = async (_id: string) => {
     if (confirm("delete")) {
-      await axios.delete("http://localhost:3000/api/products/" + _id);
+      await axios.delete("http://localhost:3000/api/products/" + _id, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       getAllProducts();
     }
   };
@@ -90,7 +99,7 @@ export const useProduct = () => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

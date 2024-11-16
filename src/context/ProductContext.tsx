@@ -12,11 +12,17 @@ type Props = {
 const ProductContext = ({ onSubmit }: Props) => {
   const { category } = useCategory();
   const { id } = useParams();
+  const token = localStorage.getItem("token");
   const { register, handleSubmit, reset } = useForm<Product>();
   useEffect(() => {
     (async () => {
       const { data } = await axios.get(
-        `http://localhost:3000/api/products/` + id
+        `http://localhost:3000/api/products/` + id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       reset(data);
     })();

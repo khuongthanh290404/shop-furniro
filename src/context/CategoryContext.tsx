@@ -19,10 +19,16 @@ const CategoryContext = ({ onSubmit }: Props) => {
     resolver: zodResolver(categorySchema),
   });
   const { id } = useParams();
+  const token = localStorage.getItem("token");
   useEffect(() => {
     (async () => {
       const { data } = await axios.get(
-        "http://localhost:3000/api/category/" + id
+        "http://localhost:3000/api/category/" + id,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       reset(data);
     })();
